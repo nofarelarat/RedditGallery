@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <title></title>
+        <script src="reddit.js/reddit.js"></script>
+        <script src="reddit.js/reddit.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <div class="images-block" id="app">
+            <img id="image" onclick="imageclick()" onmouseover="mouseover()" onmouseout="mouseout()"/><br/>
+            <h4 id="title"></h4><br/>
+            <input type="button" class="btn btn-info" onclick="clickprev()" value="back"/>
+            <input type="button" class="btn btn-info" onclick="clicknext()" value="next"/> 
+        </div>
+
+        <div class="search-block container">
+            <form>
+                <input type="text" class="form-control search-input"  id="inputText" placeholder="search.."/>
+                <input type="button" onclick="clicksearch()" class="btn btn-success" value="Search"/>
+            </form>           
+        </div>
+
+        <script>
+            var cats_data = [];
+            var index = 0;
+            (function(){
+                    var searchInput = document.getElementById("inputText");
+                    reddit.top("cats").fetch(function (res){
+                        for(var i=0;i<res.data.children.length;i++){
+                            var cat_data = res.data.children[i].data;
+                            cats_data.push(cat_data);
+                            
+                            var image = document.getElementById("image");
+                            image.setAttribute("src",cats_data[index].thumbnail);
+                        }                   
+                    }
+                );
+            })();
+
+            function imageclick(){
+                window.open("http://www.reddit.com"+cats_data[index].permalink);
+            }
+
+            function clickprev(){
+                if(index>0){
+                    index--;
+                    var image = document.getElementById("image");
+                    image.setAttribute("src",cats_data[index].thumbnail);
+                }
+            }
+
+             function clicknext(){
+                if(index<cats_data.length-1){
+                    index++;
+                    var image = document.getElementById("image");
+                    image.setAttribute("src",cats_data[index].thumbnail);
+                }
+            }
+
+            function mouseover(){
+                var title = document.getElementById("title");
+                title.innerHTML = cats_data[index].title;
+                title.style.visibility = "visible";
+            }
+
+              function mouseout(){
+                var title = document.getElementById("title");
+                title.innerHTML = "";
+                title.style.visibility = "hidden";
+            }
+
+            function clicksearch(){
+                index = 0;
+                cats_data=[];
+                var searchInput = document.getElementById("inputText");
+                reddit.top(searchInput.value).fetch(function (res){
+                    if(res.data.children.length != 0){
+                        for(var i=0;i<res.data.children.length;i++){
+                            var cat_data = res.data.children[i].data;  
+                            cats_data.push(cat_data);
+                            
+                            var image = document.getElementById("image");
+                            image.setAttribute("src",cats_data[index].thumbnail);
+                        }   
+                    }   
+                    else{
+                        alert("could not find any results");
+                    }             
+                });
+            }
+        </script>
+    </body>
+</html>

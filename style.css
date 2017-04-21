@@ -1,0 +1,30 @@
+
+.images-block{
+    margin: 35px;
+}
+
+.images-block img{
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.images-block h4{
+    font-style: italic;
+    margin: 5px;
+}
+
+.images-block input{
+    font-family: 'Times New Roman', Times, serif;
+    border-radius: 3px;
+}
+
+.search-block{
+    margin: 20px;
+}
+
+.search-block .search-input{
+    width: 30%;
+    margin-bottom: 10px;
+}
