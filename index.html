@@ -18,17 +18,26 @@
     <body>
 
         <div class="images-block" id="app">
-            <img id="image" onclick="imageclick()" onmouseover="mouseover()" onmouseout="mouseout()"/><br/>
-            <h4 id="title"></h4><br/>
+            <img id="image0" onclick="imageclick(0)" onmouseover="mouseover(0)" onmouseout="mouseout(0)"/><br/>
+            <h4 id="title0"></h4><br/>
+              <img id="image1" onclick="imageclick(1)" onmouseover="mouseover(1)" onmouseout="mouseout(1)"/><br/>
+            <h4 id="title1"></h4><br/>
+              <img id="image2" onclick="imageclick(2)" onmouseover="mouseover(2)" onmouseout="mouseout(2)"/><br/>
+            <h4 id="title2"></h4><br/>
+              <img id="image3" onclick="imageclick(3)" onmouseover="mouseover(3)" onmouseout="mouseout(3)"/><br/>
+            <h4 id="title3"></h4><br/>
+              <img id="image4" onclick="imageclick(4)" onmouseover="mouseover(4)" onmouseout="mouseout(4)"/><br/>
+            <h4 id="title4"></h4><br/>
             <input type="button" class="btn btn-info" onclick="clickprev()" value="back"/>
             <input type="button" class="btn btn-info" onclick="clicknext()" value="next"/> 
+            <h4 id="pagesNum"></h4>
         </div>
 
+        
         <div class="search-block container">
-            <form>
-                <input type="text" class="form-control search-input"  id="inputText" placeholder="search.."/>
-                <input type="button" onclick="clicksearch()" class="btn btn-success" value="Search"/>
-            </form>           
+            <p>Search for another database: </p>
+            <input type="text" class="form-control search-input"  id="inputText" placeholder="search.."/>
+            <input type="button" onclick="clicksearch()" class="btn btn-success" value="Search"/>
         </div>
 
         <script>
@@ -40,42 +49,48 @@
                         for(var i=0;i<res.data.children.length;i++){
                             var cat_data = res.data.children[i].data;
                             cats_data.push(cat_data);
-                            
-                            var image = document.getElementById("image");
-                            image.setAttribute("src",cats_data[index].thumbnail);
-                        }                   
+                        }
+                          renderData();    
                     }
                 );
             })();
 
-            function imageclick(){
-                window.open("http://www.reddit.com"+cats_data[index].permalink);
+            function imageclick(num){
+                window.open("http://www.reddit.com"+cats_data[index + num].permalink);
             }
 
             function clickprev(){
-                if(index>0){
-                    index--;
-                    var image = document.getElementById("image");
-                    image.setAttribute("src",cats_data[index].thumbnail);
+                for(var i=4;i>=0;i--){
+                    if(index>0){
+                        index--;
+                        var image = document.getElementById("image" + i);
+                        image.setAttribute("src",cats_data[index].thumbnail);
+                    }
                 }
+                renderPageText();
             }
 
              function clicknext(){
-                if(index<cats_data.length-1){
-                    index++;
-                    var image = document.getElementById("image");
-                    image.setAttribute("src",cats_data[index].thumbnail);
-                }
+                 index += 4;
+                for(var i=0;i<5;i++){
+                    if(index<cats_data.length-1){
+                            index++;
+                            var image = document.getElementById("image" + i);
+                            image.setAttribute("src",cats_data[index].thumbnail);
+                        }
+                    }
+                index -=4;
+                renderPageText();
             }
 
-            function mouseover(){
-                var title = document.getElementById("title");
-                title.innerHTML = cats_data[index].title;
+            function mouseover(num){
+                var title = document.getElementById("title" + num);
+                title.innerHTML = cats_data[index + num].title;
                 title.style.visibility = "visible";
             }
 
-              function mouseout(){
-                var title = document.getElementById("title");
+              function mouseout(num){
+                var title = document.getElementById("title" + num);
                 title.innerHTML = "";
                 title.style.visibility = "hidden";
             }
@@ -89,16 +104,49 @@
                         for(var i=0;i<res.data.children.length;i++){
                             var cat_data = res.data.children[i].data;  
                             cats_data.push(cat_data);
-                            
-                            var image = document.getElementById("image");
-                            image.setAttribute("src",cats_data[index].thumbnail);
-                        }   
+                        }
+                           renderData();
                     }   
                     else{
                         alert("could not find any results");
                     }             
                 });
             }
+
+
+            function renderData(){
+                var image = document.getElementById("image0");
+                image.setAttribute("src",cats_data[index].thumbnail);
+                index++;
+                var image = document.getElementById("image1");
+                image.setAttribute("src",cats_data[index].thumbnail);
+                index++;                            
+                var image = document.getElementById("image2");
+                image.setAttribute("src",cats_data[index].thumbnail);
+                index++;                            
+                var image = document.getElementById("image3");
+                image.setAttribute("src",cats_data[index].thumbnail);
+                index++;
+                var image = document.getElementById("image4");                    
+                image.setAttribute("src",cats_data[index].thumbnail);
+                index = 0;
+                renderPageText();
+            }
+
+            function renderPageText(){
+                var pagesNum = document.getElementById("pagesNum");
+                var pagestext = "";
+                for(var i=1;i<=cats_data.length/5;i++){
+                    if(index/5 == i-1){
+                        pagestext += " <u>" + i + "</u> ";
+                    }
+                    else{
+                        pagestext += " " + i + " ";
+                    }
+                }
+                pagesNum.innerHTML = pagestext;
+            }
+        
         </script>
     </body>
 </html>
