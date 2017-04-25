@@ -45,7 +45,7 @@
             var index = 0;
             (function(){
                     var searchInput = document.getElementById("inputText");
-                    reddit.top("cats").fetch(function (res){
+                    reddit.top("cats").limit(25).fetch(function (res){
                         for(var i=0;i<res.data.children.length;i++){
                             var cat_data = res.data.children[i].data;
                             cats_data.push(cat_data);
@@ -71,16 +71,22 @@
             }
 
              function clicknext(){
-                 index += 4;
-                for(var i=0;i<5;i++){
-                    if(index<cats_data.length-1){
-                            index++;
-                            var image = document.getElementById("image" + i);
-                            image.setAttribute("src",cats_data[index].thumbnail);
+                if(index+5<cats_data.length){
+                    index += 4;
+                    for(var i=0;i<5;i++){
+                        index++;
+                        if(index<cats_data.length){
+                                var image = document.getElementById("image" + i);
+                                image.setAttribute("src",cats_data[index].thumbnail);
+                            }
+                            else{
+                                var image = document.getElementById("image" + i);
+                                image.setAttribute("src","");
+                            }
                         }
-                    }
-                index -=4;
-                renderPageText();
+                    index -=4;
+                    renderPageText();
+                 }
             }
 
             function mouseover(num){
@@ -136,7 +142,15 @@
             function renderPageText(){
                 var pagesNum = document.getElementById("pagesNum");
                 var pagestext = "";
-                for(var i=1;i<=cats_data.length/5;i++){
+                var numOfPages = 0;
+                if(cats_data.length%5 == 0){
+                    numOfPages = cats_data.length/5; 
+                }
+                else{
+                    numOfPages = cats_data.length/5 + 1;
+                }
+
+                for(var i=1;i<=numOfPages;i++){
                     if(index/5 == i-1){
                         pagestext += " <u>" + i + "</u> ";
                     }
